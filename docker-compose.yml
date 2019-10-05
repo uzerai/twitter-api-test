@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+    twitter-api-micronaut:
+      build:
+        context: ./api
+      environment:
+        - TWITTER_CONSUMER_KEY=
+        - TWITTER_CONSUMER_SECRET=
+        - TWITTER_ACCESS_TOKEN=
+        - TWITTER_ACCESS_TOKEN_SECRET=
+      ports:
+        - 8081:8080
+      volumes:
+        - './api:/api'
+        - '/app/target'
+
+    twitter-api-react:
+      build:
+        context: ./frontend
+      links:
+        - twitter-api-micronaut
+      environment:
+        - NODE_ENV=development
+        - REACT_APP_APPLICATION_NAME=H1 Tech Test - Twitter API
+        - REACT_APP_SEARCH_SERVICE_URL=http://localhost:8081
+      ports:
+        - 8080:3000
+      depends_on:
+        - twitter-api-micronaut
+      volumes:
+        - './frontend:/app'
+        - '/app/node_modules'

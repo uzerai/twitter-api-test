@@ -1,0 +1,8 @@
+/home/ebotten/repos/twitter-api/api/src/main/java/xyz/outofmysystem/h1/service/SearchService.java
+/home/ebotten/repos/twitter-api/api/src/main/java/xyz/outofmysystem/h1/error/TwitterExceptionHandler.java
+/home/ebotten/repos/twitter-api/api/src/main/java/xyz/outofmysystem/h1/config/TwitterConfig.java
+/home/ebotten/repos/twitter-api/api/src/main/java/xyz/outofmysystem/h1/controller/SearchController.java
+/home/ebotten/repos/twitter-api/api/src/main/java/xyz/outofmysystem/h1/api/SearchApi.java
+/home/ebotten/repos/twitter-api/api/src/main/java/xyz/outofmysystem/h1/Application.java
+/home/ebotten/repos/twitter-api/api/src/main/java/xyz/outofmysystem/h1/error/ErrorBody.java
+/home/ebotten/repos/twitter-api/api/src/main/java/xyz/outofmysystem/h1/api/SearchResponse.java

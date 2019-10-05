@@ -1,0 +1,22 @@
+---
+micronaut:
+  application:
+    name: twitter-api
+
+---
+micronaut:
+  server:
+    cors:
+      enabled: true
+
+---
+datasources.default: {}
+---
+twitter4j:
+  loggerFactory: twitter4j.SLF4JLoggerFactory
+  debug: true
+  oauth:
+    consumerKey: ${TWITTER_CONSUMER_KEY:consumerKey}
+    consumerSecret: ${TWITTER_CONSUMER_SECRET:consumerSecret}
+    accessToken: ${TWITTER_ACCESS_TOKEN:accessToken}
+    accessTokenSecret: ${TWITTER_ACCESS_TOKEN_SECRET:accessTokenSecret}

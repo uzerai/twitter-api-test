@@ -1,0 +1,5 @@
+xyz.outofmysystem.h1.config.$TwitterConfig$OAuthDefinitionClass
+xyz.outofmysystem.h1.error.$TwitterExceptionHandlerDefinitionClass
+xyz.outofmysystem.h1.controller.$SearchControllerDefinitionClass
+xyz.outofmysystem.h1.config.$TwitterConfigDefinitionClass
+xyz.outofmysystem.h1.service.$SearchServiceDefinitionClass

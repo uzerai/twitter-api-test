@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>xyz.outofmysystem</groupId>
+  <artifactId>twitter-api</artifactId>
+  <version>0.1</version>
+  <properties>
+
+    <!-- ######## BUILD VERSIONING ######## -->
+    <micronaut.version>1.2.0.BUILD-SNAPSHOT</micronaut.version>
+    <jdk.version>11</jdk.version>
+    <maven.compiler.target>${jdk.version}</maven.compiler.target>
+    <maven.compiler.source>${jdk.version}</maven.compiler.source>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <exec.mainClass>xyz.outofmysystem.h1.Application</exec.mainClass>
+
+    <!-- ######## Dependency versioning ######## -->
+    <org.yaml.snakeyaml.version>1.24</org.yaml.snakeyaml.version>
+    <ch.qos.logback.version>1.2.3</ch.qos.logback.version>
+    <org.projectlombok.version>1.18.8</org.projectlombok.version>
+    <org.mariadb.version>1.5.4</org.mariadb.version>
+  </properties>
+
+  <repositories>
+    <repository>
+      <id>oss.sonatype.org</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </repository>
+  </repositories>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.micronaut</groupId>
+        <artifactId>micronaut-bom</artifactId>
+        <version>${micronaut.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <!-- ############################################################################ -->
+    <!-- ################### Micronaut default dependencies ######################### -->
+    <!-- ############################################################################ -->
+
+    <dependency>
+      <groupId>io.micronaut</groupId>
+      <artifactId>micronaut-inject</artifactId>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.micronaut</groupId>
+      <artifactId>micronaut-runtime</artifactId>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.micronaut</groupId>
+      <artifactId>micronaut-http-server-netty</artifactId>
+      <scope>compile</scope>
+    </dependency>
+
+
+    <!-- ############################################################################ -->
+    <!-- ######################### Misc dependencies ################################ -->
+    <!-- ############################################################################ -->
+
+    <dependency>
+      <groupId>org.twitter4j</groupId>
+      <artifactId>twitter4j-core</artifactId>
+      <version>[4.0,)</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>${org.projectlombok.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.yaml</groupId>
+      <artifactId>snakeyaml</artifactId>
+      <version>${org.yaml.snakeyaml.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>${ch.qos.logback.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+
+    <!-- ############################################################################ -->
+    <!-- ####################### Testing dependencies ############################### -->
+    <!-- ############################################################################ -->
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.micronaut.test</groupId>
+      <artifactId>micronaut-test-junit5</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>${exec.mainClass}</mainClass>
+                </transformer>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+              </transformers>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.6.0</version>
+        <configuration>
+          <executable>java</executable>
+          <argument>-classpath</argument>
+          <classpath/>
+          <arguments>
+            <argument>-noverify</argument>
+            <argument>-XX:TieredStopAtLevel=1</argument>
+            <argument>-Dcom.sun.management.jmxremote</argument>
+            <argument>${exec.mainClass}</argument>
+          </arguments>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.22.0</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-surefire-provider</artifactId>
+            <version>1.2.0</version>
+          </dependency>
+          <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.5.0</version>
+          </dependency>
+          <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>5.5.0</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <detail>true</detail>
+          <includes>
+            <include>%regex[.*]</include>
+          </includes>
+        </configuration>
+      </plugin>
+    </plugins>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.7.0</version>
+          <configuration>
+            <source>${jdk.version}</source>
+            <target>${jdk.version}</target>
+            <encoding>UTF-8</encoding>
+            <compilerArgs>
+              <arg>-parameters</arg>
+            </compilerArgs>
+            <annotationProcessorPaths>
+              <!-- ######## Compilation time Lombok generation ######## -->
+              <path>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${org.projectlombok.version}</version>
+              </path>
+              <path>
+                <groupId>io.micronaut</groupId>
+                <artifactId>micronaut-inject-java</artifactId>
+                <version>${micronaut.version}</version>
+              </path>
+              <path>
+                <groupId>io.micronaut</groupId>
+                <artifactId>micronaut-validation</artifactId>
+                <version>${micronaut.version}</version>
+              </path>
+              <path>
+                <groupId>io.micronaut.configuration</groupId>
+                <artifactId>micronaut-openapi</artifactId>
+                <version>${micronaut.version}</version>
+              </path>
+            </annotationProcessorPaths>
+          </configuration>
+          <executions>
+            <execution>
+              <id>test-compile</id>
+              <goals>
+                <goal>testCompile</goal>
+              </goals>
+              <configuration>
+                <compilerArgs>
+                  <arg>-parameters</arg>
+                </compilerArgs>
+                <annotationProcessorPaths>
+                  <path>
+                    <groupId>io.micronaut</groupId>
+                    <artifactId>micronaut-inject-java</artifactId>
+                    <version>${micronaut.version}</version>
+                  </path>
+                  <path>
+                    <groupId>io.micronaut</groupId>
+                    <artifactId>micronaut-validation</artifactId>
+                    <version>${micronaut.version}</version>
+                  </path>
+                  <path>
+                    <groupId>io.micronaut.configuration</groupId>
+                    <artifactId>micronaut-openapi</artifactId>
+                    <version>${micronaut.version}</version>
+                  </path>
+                </annotationProcessorPaths>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+</project>
